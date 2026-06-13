@@ -17,8 +17,17 @@ const MUTERS = [
   },
 ];
 
-const COLLAB_TEXT =
-  "Collaborano o hanno collaborato con MUTE: Asteriscollettivo, Roman Nimets, Tommaso Galloni";
+// ── Collaboratori (sezione arancione) ──
+// Il contenuto è editabile dalla dashboard admin e letto da /api/collaborators.
+// Questi default coincidono col testo originale e fanno da fallback finché
+// non viene salvata la prima versione (o se il fetch fallisce).
+type Collaborator = { name: string; url: string };
+const COLLAB_DEFAULT_PREFIX = "Collaborano o hanno collaborato con MUTE:";
+const COLLAB_DEFAULT_ITEMS: Collaborator[] = [
+  { name: "Asteriscollettivo", url: "" },
+  { name: "Roman Nimets", url: "" },
+  { name: "Tommaso Galloni", url: "" },
+];
 
 const G: React.CSSProperties = {
   fontFamily: "'EB Garamond', 'Garamond', Georgia, serif",
@@ -217,6 +226,74 @@ function VideoPlayer() {
   );
 }
 
+// Contenuto della barra arancione: prefisso + elenco membri separati da virgola.
+// I membri con un link sono cliccabili (sottolineati). Il testo scorre inline,
+// quindi quando i membri diventano tanti va a capo da solo e la barra si allunga,
+// restando coerente con lo stile attuale.
+function CollaboratorsBar() {
+  const [prefix, setPrefix] = useState(COLLAB_DEFAULT_PREFIX);
+  const [items, setItems] = useState<Collaborator[]>(COLLAB_DEFAULT_ITEMS);
+
+  useEffect(() => {
+    let alive = true;
+    fetch("/api/collaborators")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (!alive || !data) return;
+        if (typeof data.prefix === "string") setPrefix(data.prefix);
+        if (Array.isArray(data.items)) setItems(data.items);
+      })
+      .catch(() => { /* fallback ai default già impostati */ });
+    return () => { alive = false; };
+  }, []);
+
+  return (
+    <p style={{
+      ...G,
+      fontSize: "clamp(14px, 2.5vw, 36px)",
+      lineHeight: 1.75,
+      color: "#fff",
+      margin: 0,
+      textAlign: "left",
+    }}>
+      {prefix}
+      {items.length > 0 && " "}
+      {items.map((c, i) => {
+        const isLast = i === items.length - 1;
+        // Ogni nome resta integro (no a-capo a metà parola); l'a-capo avviene
+        // tra un membro e l'altro, dopo la virgola.
+        const nameNode = c.url ? (
+          <a
+            href={c.url}
+            target={/^https?:\/\//i.test(c.url) ? "_blank" : undefined}
+            rel={/^https?:\/\//i.test(c.url) ? "noopener noreferrer" : undefined}
+            style={{
+              color: "#fff",
+              textDecoration: "underline",
+              textUnderlineOffset: "0.18em",
+              textDecorationThickness: "1px",
+              transition: "opacity 0.2s",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.75")}
+            onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+          >
+            {c.name}
+          </a>
+        ) : (
+          c.name
+        );
+
+        return (
+          <span key={`${c.name}-${i}`}>
+            <span style={{ whiteSpace: "nowrap" }}>{nameNode}</span>
+            {!isLast && ", "}
+          </span>
+        );
+      })}
+    </p>
+  );
+}
+
 export default function About() {
   return (
     <main style={{ background: "#0a0a0a" }}>
@@ -310,16 +387,7 @@ export default function About() {
         justifyContent: "flex-start",
         padding: `clamp(28px, 5vw, 48px) ${SECTION_PAD}`,
       }}>
-        <p style={{
-          ...G,
-          fontSize: "clamp(14px, 2.5vw, 36px)",
-          lineHeight: 1.75,
-          color: "#fff",
-          margin: 0,
-          textAlign: "left",
-        }}>
-          {COLLAB_TEXT}
-        </p>
+        <CollaboratorsBar />
       </section>
 
     </main>

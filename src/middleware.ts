@@ -43,10 +43,16 @@ export function middleware(req: NextRequest) {
         return NextResponse.next()
     }
 
+    // GET collaboratori pubblica (la legge la pagina About)
+    if (pathname.startsWith('/api/collaborators') && method === 'GET') {
+        return NextResponse.next()
+    }
+
     // ── Rotte protette ─────────────────────────────────────────────────────────
     const isAdminPage = pathname.startsWith('/admin')
     const isProtectedApi =
         (pathname.startsWith('/api/articles') && method !== 'GET') ||
+        (pathname.startsWith('/api/collaborators') && method !== 'GET') ||
         (pathname.startsWith('/api/newsletter') && method !== 'POST') ||
         pathname.startsWith('/api/upload') ||
         pathname.startsWith('/api/media') ||

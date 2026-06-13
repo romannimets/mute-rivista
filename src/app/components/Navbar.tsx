@@ -259,10 +259,10 @@ export default function Navbar() {
           style={{
             position: "fixed",
             top: "clamp(56px, 12vw, 64px)",
-            right: 0,
+            left: 0,
             width: "min(280px, 80vw)",
             background: "#111",
-            boxShadow: "-2px 0 16px rgba(0,0,0,0.2)",
+            boxShadow: "2px 0 16px rgba(0,0,0,0.2)",
             zIndex: 2000,
             padding: "24px 0",
           }}
@@ -398,7 +398,7 @@ export default function Navbar() {
                             <h3 style={{ fontSize: 16, margin: "0 0 4px", fontWeight: 600, lineHeight: 1.3, color: "#111", fontFamily: "var(--font-mattone), Arial, sans-serif" }}>
                               {highlightText(article.title, searchQuery)}
                             </h3>
-                    
+
                             <div style={{ fontSize: 12, color: "#999", display: "flex", gap: 8, alignItems: "center" }}>
                               <span>{highlightText(article.author, searchQuery)}</span>
                               <span>·</span>

@@ -7,6 +7,7 @@ import { fetchArticles } from "@/lib/fetchArticles";
 import MediaStatsWidget from "@/app/components/MediaStatsWidget";
 import MongoStatsWidget from "@/app/components/MongoStatsWidget";
 import AnalyticsWidget from "../components/AnalyticsWidget";
+import CollaboratorsEditor from "../components/CollaboratorsEditor";
 
 type CategoryPanelState = Record<string, boolean>;
 
@@ -324,6 +325,9 @@ export default function AdminDashboard() {
                     }}
                 />
             </div>
+
+            {/* ── Collaboratori (sezione arancione About) ── */}
+            <CollaboratorsEditor />
 
             {/* Dev Stats */}
             <div style={{ marginBottom: 24, border: "1px solid #e0e0e0", borderRadius: 8, overflow: "hidden", background: "#f9f9f9" }}>
