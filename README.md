@@ -5,21 +5,21 @@ magazine. Built solo, from the collective's design to production.
 
 **Live:** [muterivista.it](https://www.muterivista.it)
 
-![Mute Rivista](docs/home.gif)
+![Mute Rivista](home.gif)
 
 ## Admin panel
 
 The editorial team publishes and edits everything without touching code —
 including the manifesto, collaborators and newsletter subscribers.
 
-![Article management](docs/admin-articoli.png)
+![Article management](admin-articoli.png)
 
 The panel also surfaces infrastructure state at a glance: Cloudinary storage,
 MongoDB collection and index size, and Google Analytics traffic.
 
-![Developer stats](docs/admin-stats.png)
+![Developer stats](admin-stats.png)
 
-![New article](docs/admin-editor.png)
+![New article](admin-editor.png)
 
 ## What it does
 
